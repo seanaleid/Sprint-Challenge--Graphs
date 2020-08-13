@@ -10,11 +10,14 @@ class World:
         self.grid_size = 0
     def load_graph(self, room_graph):
         num_rooms = len(room_graph)
+        # print(f"\t\t num_rooms: {num_rooms}")
         rooms = [None] * num_rooms
         grid_size = 1
         for i in range(0, num_rooms):
             x = room_graph[i][0][0]
+            # print(f"\t\t x: {x}")
             grid_size = max(grid_size, room_graph[i][0][0], room_graph[i][0][1])
+            # print(f"\t\t grid_size: {grid_size}")
             self.rooms[i] = Room(f"Room {i}", f"({room_graph[i][0][0]},{room_graph[i][0][1]})",i, room_graph[i][0][0], room_graph[i][0][1])
         self.room_grid = []
         grid_size += 1
@@ -23,7 +26,9 @@ class World:
             self.room_grid.append([None] * grid_size)
         for room_id in room_graph:
             room = self.rooms[room_id]
+            # print(f"\t\t room: {room}")
             self.room_grid[room.x][room.y] = room
+            # print(f'\t\t ROOM GRID{self.room_grid[room.x][room.y]}')
             if 'n' in room_graph[room_id][1]:
                 self.rooms[room_id].connect_rooms('n', self.rooms[room_graph[room_id][1]['n']])
             if 's' in room_graph[room_id][1]:
