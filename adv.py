@@ -12,16 +12,17 @@ world = World()
 
 # You may uncomment the smaller graphs for development and testing purposes.
 # map_file = "maps/test_line.txt"
-map_file = "maps/test_cross.txt"
+# map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
-# map_file = "maps/main_maze.txt"
+map_file = "maps/main_maze.txt"
 
 room_graph=literal_eval(open(map_file, "r").read())
 world.load_graph(room_graph)
 
 # Print an ASCII map --> map view in the terminal
 world.print_rooms()
+
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
 traversal_path = []
@@ -31,44 +32,76 @@ player = Player(world.starting_room)
 
 rooms = dict()
 visited = list()
-curr = player.current_room.id
+path = list()
+curr = player.current_room
+reverse_exits = {'n': 's', 's': 'n', 'w': 'e', 'e': 'w'}
 
-# populate graph
-for i in range(0, len(world.rooms)):
-    rooms[i] = dict()
+# start by adding the player.current_room.id to visited
+visited.append(curr.id)
+# also to path to view
+path.append(curr.id)
+# initialize the room num with an empty dictionary
+rooms[curr.id] = dict()
+# get the exits and for each exit, assign it '?'
+for room_exits in curr.get_exits():
+    rooms[curr.id][room_exits] = '?'
 
-    for exit in world.rooms[i].get_exits():
-        # print(f"TEST TEST TEST: {world.rooms[i].n_to.id}")
-        # print(f"ANOTHER TEST: {world.rooms[i].get_exits_id(exit)}")
-        room_num = world.rooms[i].get_exits_id(exit)
-        rooms[i].update({exit: room_num})
-        
-print(f'GRAPH ROOMS: {rooms}')
+# make a function to choose a path that takes a room_id
+def choose_path(room_id):
+    # for each exit in the dict of rooms[room_id]
+    for exit in rooms[room_id]:
+        # check if it has '?'
+        if rooms[room_id][exit] == '?':
+            # if so return that exit
+            return exit
 
-# print(f'CURRENT_ROOM: {player.current_room.get_exits()}')
+    # remove the last item from visited
+    del visited[-1]
+    # take that room number and loop through the exits (key) and room numbers (value)
+    for new_exit, room_num in rooms[visited[-1]].items():
+        # check if the room number is the same as the current room
+        if room_num == room_id:
+            # if yes, return the opposite to go back
+            return reverse_exits[new_exit]
 
-def dft(starting_room):
-    s = Stack()
-    s.push(starting_room)    
+# print(f"CURRENT ROOM ID: {player.current_room.id}")
+# while the length of the rooms dict is less than the length of the world.rooms dict runt eh following code
+while len(rooms) < len(world.rooms):
+    # create a move variable to store the current room id direction to go in (which exit to take), either a new one if it's '?' or reverse if
+    move = choose_path(player.current_room.id)
+    # make the player move in the direction of the exit
+    player.travel(move)
+    # print(f"CURRENT ROOM ID: {player.current_room.id}")
+    # add that exit to the traversal path list to run the code below
+    traversal_path.append(move)
+    # print(f"TRAVERSAL INSIDE: {traversal_path}")
+    # print(f"ROOMS INSIDE: {rooms}")
+    # print(f"VISITED: {visited[-1]}")
 
-    while s.size() > 0 and len(visited) < len(rooms):
-        r = s.pop()
-        # print(f"rrrrrr {r}")
-        print(f"CURR: {r}")
-        if r not in visited:
-            visited.append(r)
-        neighbors = rooms[r]
-        # print(f'neighbors: {neighbors}')
+    #check if the current room id is the same as the last room id in visited, if the player moved, it should be different
+    if player.current_room.id is not visited[-1]:
+        # if yes, append the id to visited
+        visited.append(player.current_room.id)
+        # and the path, just to see
+        path.append(player.current_room.id)
+    # check if the current room id is not in the room dict keys
+    if player.current_room.id not in rooms.keys():
+        # if yes, initialize an empty dict
+        rooms[player.current_room.id] = dict()
+        # get the exits and assign '?' to the exit directions
+        for new_exit in player.current_room.get_exits():
+            rooms[player.current_room.id][new_exit] = '?'
+    # check if the current room id opposite is '?'
+    if rooms[player.current_room.id][reverse_exits[move]] == '?':
+        # if yes, take the second from last room id in visited (the previous room) and assign it to that direction
+        rooms[visited[-2]][move] = player.current_room.id
+        # take the opposite of the current room id and assign it to the second from last room id in visited
+        rooms[player.current_room.id][reverse_exits[move]] = visited[-2]
 
-        for neighbor, value in neighbors.items():
-            if value not in visited:
-                traversal_path.append(neighbor)
-                s.push(value)
-    print(f'PATH: {traversal_path}')
-
-print(f"TRAVERSAL: {traversal_path}")
-dft(curr)
-
+# print(f"ROOMS: {rooms}")
+# print(f"VISITED: {visited}")
+# print(f"PATH: {path}")
+# print(f"TRAVERSAL: {traversal_path}")
 
 # TRAVERSAL TEST - DO NOT MODIFY
 visited_rooms = set()

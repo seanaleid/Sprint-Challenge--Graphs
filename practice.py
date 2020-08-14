@@ -57,11 +57,13 @@ class Graph():
                 #     s.push(next_room)
         return self.path
 
------------------""" VERSION 2 """--------------------------
-# Should I fill in the dict with the rooms as I go along?
-# 
+----------------""" VERSION 3 """--------------------------
+# Should I fill in the dict with the rooms as I go along? --> probably, that's how I'll know to look for '?' like the hint said
+# I need to get a path first, follow it and back track form it.
+# Get path first, traverse, when I hit the end, reverse the path and look for a '?', and repeat until all the rooms have been visited
+# Opposite rooms to reverse?
 
------------------""" VERSION 2 """--------------------------
+----------------""" VERSION 2 """--------------------------
 # How can I move? --> player.travel(direction) --> direction needs to be a string 'n', 's', 'e', or 'w'
 # How can I pick a random path? --> DFT
 
@@ -106,7 +108,7 @@ class Graph():
 # print(f"TRAVERSAL: {traversal_path}")
 # dft(curr)
 
------------------""" VERSION 1 """--------------------------
+----------------""" VERSION 1 """--------------------------
 # NOTES:
 """ Anything in yellow like this is original sprint code """
 # Everything else commented out is made up of my notes.
