@@ -30,7 +30,7 @@ player = Player(world.starting_room)
 """ Set up my variables to use"""
 
 rooms = dict()
-
+visited = list()
 curr = player.current_room.id
 
 # populate graph
@@ -47,15 +47,12 @@ print(f'GRAPH ROOMS: {rooms}')
 
 # print(f'CURRENT_ROOM: {player.current_room.get_exits()}')
 
-def bft(starting_room):
-    q = Queue()
-    q.enqueue(starting_room)
+def dft(starting_room):
+    s = Stack()
+    s.push(starting_room)    
 
-    visited = list()
-    path = list()
-
-    while q.size() > 0 and len(visited) < len(rooms):
-        r = q.dequeue()
+    while s.size() > 0 and len(visited) < len(rooms):
+        r = s.pop()
         # print(f"rrrrrr {r}")
         print(f"CURR: {r}")
         if r not in visited:
@@ -66,10 +63,11 @@ def bft(starting_room):
         for neighbor, value in neighbors.items():
             if value not in visited:
                 traversal_path.append(neighbor)
-                q.enqueue(value)
-    # print(f'PATH: {path}')
+                s.push(value)
+    print(f'PATH: {traversal_path}')
 
-bft(curr)
+print(f"TRAVERSAL: {traversal_path}")
+dft(curr)
 
 
 # TRAVERSAL TEST - DO NOT MODIFY

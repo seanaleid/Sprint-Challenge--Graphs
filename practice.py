@@ -58,19 +58,38 @@ class Graph():
         return self.path
 
 -----------------""" VERSION 2 """--------------------------
+# Should I fill in the dict with the rooms as I go along?
+# 
+
+-----------------""" VERSION 2 """--------------------------
 # How can I move? --> player.travel(direction) --> direction needs to be a string 'n', 's', 'e', or 'w'
 # How can I pick a random path? --> DFT
 
 """ PASSES TEST 1 """
-# def bft(starting_room):
-#     q = Queue()
-#     q.enqueue(starting_room)
+# rooms = dict()
+# visited = list()
+# curr = player.current_room.id
 
-#     visited = list()
-#     path = list()
+# populate graph
+# for i in range(0, len(world.rooms)):
+#     rooms[i] = dict()
 
-#     while q.size() > 0 and len(visited) < len(rooms):
-#         r = q.dequeue()
+#     for exit in world.rooms[i].get_exits():
+#         # print(f"TEST TEST TEST: {world.rooms[i].n_to.id}")
+#         # print(f"ANOTHER TEST: {world.rooms[i].get_exits_id(exit)}")
+#         room_num = world.rooms[i].get_exits_id(exit)
+#         rooms[i].update({exit: room_num})
+        
+# print(f'GRAPH ROOMS: {rooms}')
+
+# print(f'CURRENT_ROOM: {player.current_room.get_exits()}')
+
+# def dft(starting_room):
+#     s = Stack()
+#     s.push(starting_room)    
+
+#     while s.size() > 0 and len(visited) < len(rooms):
+#         r = s.pop()
 #         # print(f"rrrrrr {r}")
 #         print(f"CURR: {r}")
 #         if r not in visited:
@@ -81,10 +100,11 @@ class Graph():
 #         for neighbor, value in neighbors.items():
 #             if value not in visited:
 #                 traversal_path.append(neighbor)
-#                 q.enqueue(value)
-#     # print(f'PATH: {path}')
+#                 s.push(value)
+#     print(f'PATH: {traversal_path}')
 
-# bft(curr)
+# print(f"TRAVERSAL: {traversal_path}")
+# dft(curr)
 
 -----------------""" VERSION 1 """--------------------------
 # NOTES:
