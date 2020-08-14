@@ -57,7 +57,36 @@ class Graph():
                 #     s.push(next_room)
         return self.path
 
--------------------------------------------
+-----------------""" VERSION 2 """--------------------------
+# How can I move? --> player.travel(direction) --> direction needs to be a string 'n', 's', 'e', or 'w'
+# How can I pick a random path? --> DFT
+
+""" PASSES TEST 1 """
+# def bft(starting_room):
+#     q = Queue()
+#     q.enqueue(starting_room)
+
+#     visited = list()
+#     path = list()
+
+#     while q.size() > 0 and len(visited) < len(rooms):
+#         r = q.dequeue()
+#         # print(f"rrrrrr {r}")
+#         print(f"CURR: {r}")
+#         if r not in visited:
+#             visited.append(r)
+#         neighbors = rooms[r]
+#         # print(f'neighbors: {neighbors}')
+
+#         for neighbor, value in neighbors.items():
+#             if value not in visited:
+#                 traversal_path.append(neighbor)
+#                 q.enqueue(value)
+#     # print(f'PATH: {path}')
+
+# bft(curr)
+
+-----------------""" VERSION 1 """--------------------------
 # NOTES:
 """ Anything in yellow like this is original sprint code """
 # Everything else commented out is made up of my notes.

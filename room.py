@@ -26,6 +26,15 @@ class Room:
         if self.e_to is not None:
             exits.append("e")
         return exits
+    def get_exits_id(self, exit):
+        if exit == 'n':
+            return self.n_to.id
+        if exit == 's':
+            return self.s_to.id
+        if exit == 'e':
+            return self.e_to.id
+        if exit == 'w':
+            return self.w_to.id
     def get_exits_string(self):
         return f"Exits: [{', '.join(self.get_exits())}]"
     def connect_rooms(self, direction, connecting_room):

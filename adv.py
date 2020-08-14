@@ -1,6 +1,7 @@
 from room import Room
 from player import Player
 from world import World
+from utils import Queue, Stack
 
 import random
 from ast import literal_eval
@@ -9,35 +10,9 @@ import time
 # Load world
 world = World()
 
-class Queue():
-    def __init__(self):
-        self.queue = []
-    def enqueue(self, value):
-        self.queue.append(value)
-    def dequeue(self):
-        if self.size() > 0:
-            return self.queue.pop(0)
-        else: 
-            return None
-    def size(self):
-        return len(self.queue)
-
-class Stack():
-    def __init__(self):
-        self.stack = []
-    def push(self, value):
-        self.stack.append(value)
-    def pop(self):
-        if self.size() > 0:
-            return self.stack.pop()
-        else:
-            return None
-    def size(self):
-        return len(self.stack)
-
 # You may uncomment the smaller graphs for development and testing purposes.
-map_file = "maps/test_line.txt"
-# map_file = "maps/test_cross.txt"
+# map_file = "maps/test_line.txt"
+map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
 # map_file = "maps/main_maze.txt"
@@ -45,16 +20,56 @@ map_file = "maps/test_line.txt"
 room_graph=literal_eval(open(map_file, "r").read())
 world.load_graph(room_graph)
 
-
 # Print an ASCII map --> map view in the terminal
 world.print_rooms()
-
-player = Player(world.starting_room)
-
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
 traversal_path = []
+player = Player(world.starting_room)
 
+""" Set up my variables to use"""
+
+rooms = dict()
+
+curr = player.current_room.id
+
+# populate graph
+for i in range(0, len(world.rooms)):
+    rooms[i] = dict()
+
+    for exit in world.rooms[i].get_exits():
+        # print(f"TEST TEST TEST: {world.rooms[i].n_to.id}")
+        # print(f"ANOTHER TEST: {world.rooms[i].get_exits_id(exit)}")
+        room_num = world.rooms[i].get_exits_id(exit)
+        rooms[i].update({exit: room_num})
+        
+print(f'GRAPH ROOMS: {rooms}')
+
+# print(f'CURRENT_ROOM: {player.current_room.get_exits()}')
+
+def bft(starting_room):
+    q = Queue()
+    q.enqueue(starting_room)
+
+    visited = list()
+    path = list()
+
+    while q.size() > 0 and len(visited) < len(rooms):
+        r = q.dequeue()
+        # print(f"rrrrrr {r}")
+        print(f"CURR: {r}")
+        if r not in visited:
+            visited.append(r)
+        neighbors = rooms[r]
+        # print(f'neighbors: {neighbors}')
+
+        for neighbor, value in neighbors.items():
+            if value not in visited:
+                traversal_path.append(neighbor)
+                q.enqueue(value)
+    # print(f'PATH: {path}')
+
+bft(curr)
 
 
 # TRAVERSAL TEST - DO NOT MODIFY
